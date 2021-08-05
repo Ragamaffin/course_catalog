@@ -2,7 +2,6 @@
 
 namespace app\controllers;
 
-use app\models\Category;
 use app\models\Course;
 use app\models\CoursesCategories;
 use app\models\Teacher;
