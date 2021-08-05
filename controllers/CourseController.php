@@ -134,7 +134,16 @@ class CourseController extends Controller
     {
         $course = $this->findModel($id);
         $courseCategory = new CoursesCategories();
-        $categories = ArrayHelper::map(Category::find()->all(), 'id', 'name');
+
+        $categories = (new \yii\db\Query())
+            ->select('categories.*')
+            ->from('categories')
+            ->leftJoin('courses_categories',
+                ['categories.id' => new \yii\db\Expression('courses_categories.category_id'), 'courses_categories.course_id' => $id ])
+            ->where(['courses_categories.course_id' => null])
+            ->all();
+
+        $categories = ArrayHelper::map($categories, 'id', 'name');
 
         $courseCategory->course_id = $id;
         if ($courseCategory->load(Yii::$app->request->post()) && $courseCategory->save()) {

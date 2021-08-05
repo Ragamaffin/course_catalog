@@ -47,6 +47,22 @@ class CategoryController extends Controller
         ]);
     }
 
+    public function actionSearch()
+    {
+        $search = Yii::$app->request->get('search');
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => Category::find()->where(['like', 'name', $search]),
+            'pagination' => [
+                'pageSize' => 5
+            ]
+        ]);
+
+        return $this->render('index', [
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
     /**
      * Displays a single Category model.
      * @param integer $id

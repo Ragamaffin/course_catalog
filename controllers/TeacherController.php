@@ -47,6 +47,23 @@ class TeacherController extends Controller
         ]);
     }
 
+    public function actionSearch()
+    {
+        $select = Yii::$app->request->get('select');
+        $search = Yii::$app->request->get('search');
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => Teacher::find()->where(['like', $select, $search]),
+            'pagination' => [
+                'pageSize' => 5
+            ]
+        ]);
+
+        return $this->render('index', [
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
     /**
      * Displays a single Teacher model.
      * @param integer $id
