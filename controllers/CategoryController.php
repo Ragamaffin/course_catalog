@@ -4,9 +4,13 @@ namespace app\controllers;
 
 use Yii;
 use app\models\Category;
+
 use yii\data\ActiveDataProvider;
+
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\UploadedFile;
+
 use yii\filters\VerbFilter;
 
 /**
@@ -86,9 +90,15 @@ class CategoryController extends Controller
         $model = new Category();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $image = UploadedFile::getInstance($model, 'image');
+            if ($image != NULL) {
+                $imageName = 'category_' . $model->id . '.' . $image->getExtension();
+                $image->saveAs(Yii::getAlias('@categoryImgPath') . '/' . $imageName);
+                $model->image = $imageName;
+                $model->save();
+            }
             return $this->redirect(['view', 'id' => $model->id]);
         }
-
         return $this->render('create', [
             'model' => $model,
         ]);
@@ -104,8 +114,23 @@ class CategoryController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        $oldImageName = $model->image;
+        if ($oldImageName != ""){
+            $path = Yii::getAlias('@categoryImgPath').'/'.$oldImageName;
+        }
+        if ($model->load(Yii::$app->request->post())) {
+            if(isset($path)){
+                if(file_exists($path)) {
+                    unlink($path);
+                }
+            }
+            $image = UploadedFile::getInstance($model, 'image');
+            if ($image != NULL) {
+                $imageName = 'category_' . $model->id . '.' . $image->getExtension();
+                $image->saveAs(Yii::getAlias('@categoryImgPath') . '/' . $imageName);
+                $model->image = $imageName;
+            }
+            $model->save();
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -123,7 +148,9 @@ class CategoryController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        unlink(Yii::getAlias('@categoryImgPath').'/'.$model->image);
+        $model->delete();
 
         return $this->redirect(['index']);
     }

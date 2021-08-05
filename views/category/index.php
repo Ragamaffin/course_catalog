@@ -31,7 +31,13 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             'name',
-            'image',
+            [
+                'attribute' => 'image',
+                'value' => function ($model){
+                                return Yii::getAlias('@categoryImgUrl') . '/' . $model->image;
+                            },
+                'format' => ['image', ['height' => 200]]
+            ],
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>

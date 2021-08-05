@@ -12,6 +12,11 @@ $config = [
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
+//        '@categoryImgPath' => 'C:\xampp\htdocs\test_task\images\category',
+//        '@categoryImgUrl' => 'http://localhost/test_task/images/category'
+
+        '@categoryImgPath' => 'C:/xampp/htdocs/test_task/images/category',
+        '@categoryImgUrl' => 'http://localhost/test_task/images/category'
     ],
     'components' => [
         'urlManager' => [
