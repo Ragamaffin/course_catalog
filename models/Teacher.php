@@ -31,9 +31,11 @@ class Teacher extends \yii\db\ActiveRecord
         return [
             [['name'], 'required'],
             [['phone'], 'default', 'value' => null],
-            [['phone'], 'integer'],
             [['name'], 'string', 'max' => 255],
             [['phone'], 'unique'],
+            ['phone', 'match',
+                'pattern' => '/^\+380(39|67|68|96|97|98|50|66|95|99|63|93)[0-9]{7}$/',
+                'message' => 'Phone number must be in ukrainian format (+380**1234567)']
         ];
     }
 
