@@ -53,10 +53,10 @@ class Category extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-//    public function getCoursesCategories()
-//    {
-//        return $this->hasMany(CoursesCategories::className(), ['category_id' => 'id']);
-//    }
+    public function getCoursesCategories()
+    {
+        return $this->hasMany(CoursesCategories::className(), ['category_id' => 'id']);
+    }
 
     /**
      * Gets query for [[Courses]].

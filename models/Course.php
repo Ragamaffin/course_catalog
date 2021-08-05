@@ -47,7 +47,8 @@ class Course extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'name' => 'Name',
-            'teacher_id' => 'Teacher ID',
+            'teacher_id' => 'Teacher',
+            'category_id' => 'Categories',
         ];
     }
 
@@ -66,10 +67,10 @@ class Course extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-//    public function getCoursesCategories()
-//    {
-//        return $this->hasMany(CoursesCategories::className(), ['course_id' => 'id']);
-//    }
+    public function getCoursesCategories()
+    {
+        return $this->hasMany(CoursesCategories::className(), ['course_id' => 'id']);
+    }
 
     /**
      * Gets query for [[Categories]].
@@ -79,5 +80,14 @@ class Course extends \yii\db\ActiveRecord
     public function getCategory()
     {
         return $this->hasMany(Category::className(), ['id' => 'category_id'])->viaTable('courses_categories', ['course_id' => 'id']);
+    }
+
+    public function getTeacherName()
+    {
+        if ($this->teacher != NULL){
+            return $this->teacher->name;
+        } else {
+            return 'Преподаватель не выбран';
+        }
     }
 }

@@ -54,7 +54,7 @@ class Teacher extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getCourses()
+    public function getCourse()
     {
         return $this->hasOne(Course::className(), ['teacher_id' => 'id']);
     }

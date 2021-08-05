@@ -2,12 +2,16 @@
 
 namespace app\controllers;
 
-use Yii;
+use app\models\Category;
 use app\models\Course;
+use app\models\CoursesCategories;
+use app\models\Teacher;
+use Yii;
 use yii\data\ActiveDataProvider;
+use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * CourseController implements the CRUD actions for Course model.
@@ -47,6 +51,23 @@ class CourseController extends Controller
         ]);
     }
 
+    public function actionSearch()
+    {
+        $select = Yii::$app->request->get('select');
+        $search = Yii::$app->request->get('search');
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => Course::find()->joinWith(['teacher','category'], true)->where(['like', $select, $search]),
+            'pagination' => [
+                'pageSize' => 5
+            ]
+        ]);
+
+        return $this->render('index', [
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
     /**
      * Displays a single Course model.
      * @param integer $id
@@ -73,8 +94,19 @@ class CourseController extends Controller
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
+        $teachers = Teacher::find()->all();
+        $freeTeachers = [];
+        foreach ($teachers as $teacher)
+        {
+            if ($teacher->course == NULL){
+                $freeTeachers[] = $teacher;
+            }
+        }
+        $teachers = ArrayHelper::map($freeTeachers, 'id', 'name');
+
         return $this->render('create', [
             'model' => $model,
+            'teachers' => $teachers,
         ]);
     }
 
@@ -96,6 +128,47 @@ class CourseController extends Controller
         return $this->render('update', [
             'model' => $model,
         ]);
+    }
+
+    public function actionAddCategory($id)
+    {
+        $course = $this->findModel($id);
+        $courseCategory = new CoursesCategories();
+        $categories = ArrayHelper::map(Category::find()->all(), 'id', 'name');
+
+        $courseCategory->course_id = $id;
+        if ($courseCategory->load(Yii::$app->request->post()) && $courseCategory->save()) {
+            return $this->redirect(['view', 'id' => $course->id]);
+        }
+
+        return $this->render('add-category', [
+            'course' => $course,
+            'courseCategory' => $courseCategory,
+            'categories' => $categories
+        ]);
+    }
+
+    public function actionManageCategories($id)
+    {
+        $course = $this->findModel($id);
+        $dataProvider = new ActiveDataProvider([
+            'query' => CoursesCategories::find()->where(['course_id' => $id]),
+            'pagination' => [
+                'pageSize' => 10
+            ]
+        ]);
+
+        return $this->render('manage-categories', [
+            'dataProvider' => $dataProvider,
+            'course' => $course,
+        ]);
+    }
+
+    public function actionDeleteCategory($course_id, $category_id)
+    {
+        CoursesCategories::find()->where(['course_id' => $course_id, 'category_id' => $category_id])->one()->delete();
+
+        return $this->redirect(['manage-categories', 'id' => $course_id]);
     }
 
     /**

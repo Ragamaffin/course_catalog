@@ -1,9 +1,7 @@
 <?php
 
-use app\models\Teacher;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Course */
@@ -16,12 +14,7 @@ use yii\helpers\ArrayHelper;
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
-    <?php
-        $teachers = Teacher::find()->all();
-        $listData = ArrayHelper::map($teachers, 'id', 'name');
-    ?>
-
-    <?= $form->field($model, 'teacher')->dropDownList($listData) ?>
+    <?= $form->field($model, 'teacher_id')->dropDownList($teachers, ['prompt' => 'Выберите преподавателя']) ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

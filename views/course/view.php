@@ -24,6 +24,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 'method' => 'post',
             ],
         ]) ?>
+        <?= Html::a('Add category', ['add-category', 'id' => $model->id], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Manage categories', ['manage-categories', 'id' => $model->id], ['class' => 'btn btn-warning']) ?>
     </p>
 
     <?= DetailView::widget([
@@ -33,11 +35,18 @@ $this->params['breadcrumbs'][] = $this->title;
             'name',
             [
                     'attribute' => 'teacher_id',
-                    'label' => 'Teacher',
-                    'value' => function($model){
-                        return $model->teacher->name;
-                    }
+                    'value' => $model->getTeacherName()
             ],
+            [
+                'attribute' => 'category_id',
+                'value' => function($model){
+                    $categories = [];
+                    foreach ($model->category as $category){
+                        $categories[] = $category->name;
+                    }
+                    return implode(', ', $categories);
+                }
+            ]
         ],
     ]) ?>
 
