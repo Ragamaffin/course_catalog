@@ -149,7 +149,11 @@ class CategoryController extends Controller
     public function actionDelete($id)
     {
         $model = $this->findModel($id);
-        unlink(Yii::getAlias('@categoryImgPath').'/'.$model->image);
+        $imageName = $model->image;
+        if ($imageName != ""){
+            unlink(Yii::getAlias('@categoryImgPath').'/'.$imageName);
+        }
+
         $model->delete();
 
         return $this->redirect(['index']);
