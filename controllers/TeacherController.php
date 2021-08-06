@@ -53,7 +53,7 @@ class TeacherController extends Controller
         $search = Yii::$app->request->get('search');
 
         $dataProvider = new ActiveDataProvider([
-            'query' => Teacher::find()->where(['like', $select, $search]),
+            'query' => Teacher::find()->where(['ilike', $select, $search]),
             'pagination' => [
                 'pageSize' => 5
             ]

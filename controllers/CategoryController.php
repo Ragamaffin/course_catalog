@@ -56,7 +56,7 @@ class CategoryController extends Controller
         $search = Yii::$app->request->get('search');
 
         $dataProvider = new ActiveDataProvider([
-            'query' => Category::find()->where(['like', 'name', $search]),
+            'query' => Category::find()->where(['ilike', 'name', $search]),
             'pagination' => [
                 'pageSize' => 5
             ]
