@@ -20,7 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
     <form method="get" class="form-inline" action="<?= Url::to(['category/search'])?>">
-        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="search" name="search">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search by name" aria-label="Search" id="search" name="search">
         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
     </form>
     </p>
