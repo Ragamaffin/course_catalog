@@ -42,17 +42,15 @@ $this->params['breadcrumbs'][] = $this->title;
             'name',
             [
                 'attribute' => 'teacher_id',
-                'value' => 'teacher.name'
+                'value' => function($model){
+                        return $model->getTeacherName();
+                }
             ],
 
             [
                 'attribute' => 'category_id',
                 'value' => function($model){
-                    $categories = [];
-                    foreach ($model->category as $category){
-                        $categories[] = $category->name;
-                    }
-                    return implode(', ', $categories);
+                        return $model->getCategoriesName();
                   }
             ],
 

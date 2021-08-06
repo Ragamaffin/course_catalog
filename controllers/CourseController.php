@@ -124,8 +124,11 @@ class CourseController extends Controller
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
+        $teachers = $this->getFreeTeachers($id);
+
         return $this->render('update', [
             'model' => $model,
+            'teachers' => $teachers
         ]);
     }
 
@@ -134,15 +137,7 @@ class CourseController extends Controller
         $course = $this->findModel($id);
         $courseCategory = new CoursesCategories();
 
-        $categories = (new \yii\db\Query())
-            ->select('categories.*')
-            ->from('categories')
-            ->leftJoin('courses_categories',
-                ['categories.id' => new \yii\db\Expression('courses_categories.category_id'), 'courses_categories.course_id' => $id ])
-            ->where(['courses_categories.course_id' => null])
-            ->all();
-
-        $categories = ArrayHelper::map($categories, 'id', 'name');
+        $categories = $this->getFreeCategories($id);
 
         $courseCategory->course_id = $id;
         if ($courseCategory->load(Yii::$app->request->post()) && $courseCategory->save()) {
@@ -192,6 +187,32 @@ class CourseController extends Controller
 
         return $this->redirect(['index']);
     }
+
+    protected function getFreeCategories($id){
+        $categories = (new \yii\db\Query())
+            ->select('categories.*')
+            ->from('categories')
+            ->leftJoin('courses_categories',
+                ['categories.id' => new \yii\db\Expression('courses_categories.category_id'), 'courses_categories.course_id' => $id ])
+            ->where(['courses_categories.course_id' => null])
+            ->all();
+
+        $categories = ArrayHelper::map($categories, 'id', 'name');
+        return $categories;
+    }
+
+    protected function getFreeTeachers($id){
+        $teachers = (new \yii\db\Query())
+            ->select('teachers.*')
+            ->from('teachers')
+            ->leftJoin('courses',
+            ['teachers.id' => new \yii\db\Expression('courses.teacher_id'), 'courses.id' => $id])
+            ->where(['courses.id' => null])
+            ->all();
+        $teachers = ArrayHelper::map($teachers, 'id', 'name');
+        return $teachers;
+    }
+
 
     /**
      * Finds the Course model based on its primary key value.

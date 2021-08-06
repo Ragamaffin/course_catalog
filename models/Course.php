@@ -90,4 +90,12 @@ class Course extends \yii\db\ActiveRecord
             return 'Преподаватель не выбран';
         }
     }
+
+    public function getCategoriesName(){
+        $categories = [];
+        foreach ($this->category as $category){
+            $categories[] = $category->name;
+        }
+        return implode(', ', $categories);
+    }
 }
