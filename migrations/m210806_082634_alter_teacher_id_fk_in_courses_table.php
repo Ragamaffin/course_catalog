@@ -22,12 +22,6 @@ class m210806_082634_alter_teacher_id_fk_in_courses_table extends Migration
             'courses'
         );
 
-        $this->createIndex(
-            'idx-courses-teacher_id',
-            'courses',
-            'teacher_id'
-        );
-
         $this->addForeignKey(
             'fk-courses-teacher_id',
             'courses',
@@ -36,6 +30,13 @@ class m210806_082634_alter_teacher_id_fk_in_courses_table extends Migration
             'id',
             'SET NULL',
             'CASCADE'
+        );
+
+        $this->createIndex(
+            'idx-courses-teacher_id',
+            'courses',
+            'teacher_id',
+            true
         );
     }
 

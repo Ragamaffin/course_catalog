@@ -35,7 +35,7 @@ class Course extends \yii\db\ActiveRecord
             [['teacher_id'], 'default', 'value' => null],
             [['teacher_id'], 'integer'],
             [['name'], 'string', 'max' => 255],
-            [['teacher_id'], 'exist', 'skipOnError' => true, 'targetClass' => Teacher::className(), 'targetAttribute' => ['teacher_id' => 'id']],
+            [['teacher_id'], 'exist', 'skipOnError' => false, 'targetClass' => Teacher::className(), 'targetAttribute' => ['teacher_id' => 'id']],
         ];
     }
 

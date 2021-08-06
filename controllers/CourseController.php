@@ -206,7 +206,7 @@ class CourseController extends Controller
             ->select('teachers.*')
             ->from('teachers')
             ->leftJoin('courses',
-            ['teachers.id' => new \yii\db\Expression('courses.teacher_id'), 'courses.id' => $id])
+            ['teachers.id' => new \yii\db\Expression('courses.teacher_id')])
             ->where(['courses.id' => null])
             ->all();
         $teachers = ArrayHelper::map($teachers, 'id', 'name');
