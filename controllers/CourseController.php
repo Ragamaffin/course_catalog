@@ -4,11 +4,10 @@ namespace app\controllers;
 
 use app\models\Course;
 use app\models\CoursesCategories;
-use app\models\Teacher;
 use Yii;
+use yii\helpers\ArrayHelper;
 use yii\data\ActiveDataProvider;
 use yii\filters\VerbFilter;
-use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
@@ -93,15 +92,7 @@ class CourseController extends Controller
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
-        $teachers = Teacher::find()->all();
-        $freeTeachers = [];
-        foreach ($teachers as $teacher)
-        {
-            if ($teacher->course == NULL){
-                $freeTeachers[] = $teacher;
-            }
-        }
-        $teachers = ArrayHelper::map($freeTeachers, 'id', 'name');
+        $teachers = $model->getFreeTeachers();
 
         return $this->render('create', [
             'model' => $model,
@@ -124,7 +115,18 @@ class CourseController extends Controller
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
-        $teachers = $this->getFreeTeachers($id);
+        $teachers = $model->getFreeTeachers();
+        if($model->teacher != null) {
+            $activeTeacher = [
+                $model->teacher->id => $model->teacher->name
+            ];
+            $removeTeacher = [
+                '' => 'Убрать преподавателя'
+            ];
+            $teachers = $activeTeacher + $teachers + $removeTeacher;
+        } else {
+            $teachers = ['' => 'Выберите преподавателя'] + $teachers;
+        }
 
         return $this->render('update', [
             'model' => $model,
@@ -137,7 +139,7 @@ class CourseController extends Controller
         $course = $this->findModel($id);
         $courseCategory = new CoursesCategories();
 
-        $categories = $this->getFreeCategories($id);
+        $categories = $course->getFreeCategories($id);
 
         $courseCategory->course_id = $id;
         if ($courseCategory->load(Yii::$app->request->post()) && $courseCategory->save()) {
@@ -187,32 +189,6 @@ class CourseController extends Controller
 
         return $this->redirect(['index']);
     }
-
-    protected function getFreeCategories($id){
-        $categories = (new \yii\db\Query())
-            ->select('categories.*')
-            ->from('categories')
-            ->leftJoin('courses_categories',
-                ['categories.id' => new \yii\db\Expression('courses_categories.category_id'), 'courses_categories.course_id' => $id ])
-            ->where(['courses_categories.course_id' => null])
-            ->all();
-
-        $categories = ArrayHelper::map($categories, 'id', 'name');
-        return $categories;
-    }
-
-    protected function getFreeTeachers($id){
-        $teachers = (new \yii\db\Query())
-            ->select('teachers.*')
-            ->from('teachers')
-            ->leftJoin('courses',
-            ['teachers.id' => new \yii\db\Expression('courses.teacher_id')])
-            ->where(['courses.id' => null])
-            ->all();
-        $teachers = ArrayHelper::map($teachers, 'id', 'name');
-        return $teachers;
-    }
-
 
     /**
      * Finds the Course model based on its primary key value.

@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "courses".
@@ -96,6 +97,36 @@ class Course extends \yii\db\ActiveRecord
         foreach ($this->category as $category){
             $categories[] = $category->name;
         }
-        return implode(', ', $categories);
+        if(!empty($categories)){
+            return implode(', ', $categories);
+        } else {
+            return "Категории не выбраны";
+        }
+    }
+
+    public function getFreeCategories($id){
+        $categories = (new \yii\db\Query())
+            ->select('categories.*')
+            ->from('categories')
+            ->leftJoin('courses_categories',
+                ['categories.id' => new \yii\db\Expression('courses_categories.category_id'), 'courses_categories.course_id' => $id ])
+            ->where(['courses_categories.course_id' => null])
+            ->all();
+
+        $categories = ArrayHelper::map($categories, 'id', 'name');
+        return $categories;
+    }
+
+    public function getFreeTeachers(){
+        $teachers = (new \yii\db\Query())
+            ->select('teachers.*')
+            ->from('teachers')
+            ->leftJoin('courses',
+                ['teachers.id' => new \yii\db\Expression('courses.teacher_id')])
+            ->where(['courses.id' => null])
+            ->all();
+        $teachers = ArrayHelper::map($teachers, 'id', 'name');
+        return $teachers;
     }
 }
+
