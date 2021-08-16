@@ -33,6 +33,7 @@ class Category extends \yii\db\ActiveRecord
             [['name'], 'required'],
             [['name', 'image'], 'string', 'max' => 255],
             [['name','image'], 'unique'],
+            [['image'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg, gif']
         ];
     }
 
