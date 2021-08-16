@@ -41,13 +41,13 @@ class CategoryController extends Controller
     {
         $dataProvider = new ActiveDataProvider([
             'query' => Category::find(),
+            'pagination' => [
+                'pageSize' => 2
+            ]
         ]);
 
         return $this->render('index', [
-            'dataProvider' => $dataProvider,
-            'pagination' => [
-                'pageSize' => 5
-            ]
+            'dataProvider' => $dataProvider
         ]);
     }
 
@@ -58,7 +58,7 @@ class CategoryController extends Controller
         $dataProvider = new ActiveDataProvider([
             'query' => Category::find()->where(['ilike', 'name', $search]),
             'pagination' => [
-                'pageSize' => 5
+                'pageSize' => 2
             ]
         ]);
 
