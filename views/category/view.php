@@ -24,6 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'method' => 'post',
             ],
         ]) ?>
+        <?= Html::a('Update image', ['update-image', 'id' => $model->id], ['class' => 'btn btn-warning']) ?>
     </p>
 
     <?= DetailView::widget([

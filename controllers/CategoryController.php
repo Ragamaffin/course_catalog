@@ -114,6 +114,19 @@ class CategoryController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
+
+        return $this->render('update', [
+            'model' => $model,
+        ]);
+    }
+
+    public function actionUpdateImage($id)
+    {
+        $model = $this->findModel($id);
         $oldImageName = $model->image;
         if ($oldImageName != ""){
             $path = Yii::getAlias('@categoryImgPath').'/'.$oldImageName;
@@ -134,7 +147,7 @@ class CategoryController extends Controller
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
-        return $this->render('update', [
+        return $this->render('update-image', [
             'model' => $model,
         ]);
     }
