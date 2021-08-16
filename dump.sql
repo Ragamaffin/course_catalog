@@ -189,10 +189,10 @@ ALTER TABLE ONLY public.teachers ALTER COLUMN id SET DEFAULT nextval('public.tea
 --
 
 COPY public.categories (id, name, image) FROM stdin;
-37	PHP	category_37.png
 38	CSS	category_38.png
 39	JavaScript	category_39.png
 40	SQL	category_40.png
+37	PHP	category_37.png
 \.
 
 
@@ -202,11 +202,11 @@ COPY public.categories (id, name, image) FROM stdin;
 
 COPY public.courses (id, name, teacher_id) FROM stdin;
 39	Course Five	\N
-34	Course One	10
-36	Course Three	11
 38	Course Four	12
 35	Course Two	13
 40	Course Six	\N
+36	Course Three	11
+34	Course One	10
 \.
 
 
@@ -276,7 +276,7 @@ SELECT pg_catalog.setval('public.courses_id_seq', 40, true);
 -- Name: teachers_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.teachers_id_seq', 13, true);
+SELECT pg_catalog.setval('public.teachers_id_seq', 14, true);
 
 
 --
