@@ -55,7 +55,7 @@ class CourseController extends Controller
         $search = Yii::$app->request->get('search');
 
         $dataProvider = new ActiveDataProvider([
-            'query' => Course::find()->joinWith(['teacher','category'], true)->where(['ilike', $select, $search])->groupBy(['courses.id']),
+            'query' => Course::find()->joinWith(['teacher','category'], true)->where(['ilike', $select, $search.'%', false])->groupBy(['courses.id']),
             'pagination' => [
                 'pageSize' => 5
             ]
